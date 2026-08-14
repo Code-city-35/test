@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог — Код города</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:50px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html" class="active">Каталог</a>
+                    <a href="blog.html">Блог</a>
+                    <a href="rules.html">Правила</a>
+                    <a href="profile.html">Профиль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-title">Доступные <span>квесты</span></div>
+                    <div class="section-line"></div>
+                </div>
+                <div class="consent-banner" style="background:rgba(255,107,53,0.05); border:1px solid rgba(255,107,53,0.1); padding:16px 20px; margin-bottom:32px; display:flex; gap:12px; align-items:flex-start;">
+                    <span style="font-size:22px;">⚖️</span>
+                    <div>
+                        <span style="font-weight:700; color:#ff6b35;">ВНИМАНИЕ: ПОДТВЕРЖДЕНИЕ СОГЛАСИЯ</span>
+                        <p style="color:#8a9bb5; font-size:14px; margin-top:4px;">
+                            Начиная любой квест, вы подтверждаете, что ознакомились с 
+                            <a href="rules.html" style="color:#ff6b35; text-decoration:underline;">правилами игры</a> 
+                            и принимаете личную ответственность за свои действия.
+                        </p>
+                    </div>
+                </div>
+                <div class="quests-grid" id="catalogList">
+                    <!-- Загружается из main.js -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+            <p class="footer-small">* Участие в квесте добровольное. Будьте внимательны на улицах.</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <!-- Скрипты -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/quests-data.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <script>
+        // Бургер-меню
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

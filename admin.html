@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка — Код города</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Встроенные стили для админки */
+        .admin-login { max-width: 400px; margin: 40px auto; text-align: center; }
+        .admin-login input { width: 100%; padding: 12px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 16px; }
+        .admin-login button { padding: 12px 24px; background: #ff6b35; color: #000; border: none; font-weight: 700; cursor: pointer; }
+        .admin-panel { max-width: 900px; margin: 0 auto; }
+        .admin-toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+        .admin-toolbar button { padding: 8px 16px; background: #ff6b35; color: #000; border: none; cursor: pointer; font-weight: 600; }
+        .admin-toolbar button.danger { background: transparent; color: #ff6b6b; border: 1px solid #ff6b6b; }
+        .admin-item { background: #1a1a1a; padding: 12px 16px; margin-bottom: 8px; border: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .admin-item .info .title { font-weight: 700; color: #fff; }
+        .admin-item .info .sub { color: #8a9bb5; font-size: 13px; }
+        .admin-item .actions button { background: transparent; border: 1px solid #444; color: #ccc; padding: 4px 12px; cursor: pointer; margin-left: 4px; }
+        .admin-item .actions button.danger { color: #ff6b6b; border-color: #ff6b6b44; }
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 999; }
+        .modal { background: #1a1a1a; padding: 24px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; border: 1px solid #333; }
+        .modal h3 { color: #ff6b35; margin-bottom: 16px; }
+        .modal .field { margin-bottom: 12px; }
+        .modal .field label { display: block; color: #8a9bb5; font-size: 13px; margin-bottom: 4px; }
+        .modal .field input, .modal .field textarea, .modal .field select { width: 100%; padding: 8px; background: #0a0a0a; border: 1px solid #333; color: #fff; }
+        .modal .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px; }
+        .modal .modal-actions button { padding: 8px 20px; border: none; cursor: pointer; font-weight: 600; }
+        .modal .modal-actions button.cancel { background: transparent; color: #8a9bb5; }
+        .modal .modal-actions button.save { background: #ff6b35; color: #000; }
+        .clue-block { border: 1px solid #333; padding: 12px; margin-top: 8px; background: #0a0a0a; }
+        .clue-block .clue-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+        .clue-block input, .clue-block select { width: 100%; padding: 4px 8px; background: #111; border: 1px solid #333; color: #fff; }
+        .clue-block label { font-size: 11px; color: #8a9bb5; display: block; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:60px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="blog.html">Блог</a>
+                    <a href="rules.html">Правила</a>
+                    <a href="profile.html">Профиль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container" style="padding: 20px 0;">
+            <div id="adminContent"></div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <script type="module" src="js/admin.js"></script>
+
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

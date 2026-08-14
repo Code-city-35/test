@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Правила — Код города</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:50px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="blog.html">Блог</a>
+                    <a href="rules.html" class="active">Правила</a>
+                    <a href="profile.html">Профиль</a>
+                </div>>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="rules-section">
+            <div class="container">
+                <div class="rules-container">
+                    <h1 class="rules-title">📋 Правила игры</h1>
+                    <p class="rules-subtitle">Ознакомьтесь перед началом квеста</p>
+                    <div class="rules-content">
+                        <div class="rule-block">
+                            <h2>1. Общие положения</h2>
+                            <p>1.1. Городской квест «Код города» (далее — «Квест») является добровольной интеллектуально-развлекательной игрой.</p>
+                            <p>1.2. Участвуя в Квесте, игрок автоматически соглашается с настоящими правилами и обязуется их соблюдать.</p>
+                        </div>
+                        <div class="rule-block">
+                            <h2>2. Как играть</h2>
+                            <p>2.1. Игрок выбирает квест в каталоге на сайте.</p>
+                            <p>2.2. На каждой точке маршрута игрок находит стикер с QR-кодом и вводит его на сайте.</p>
+                            <p>2.3. После правильного ввода кода игрок получает следующую улику или финальные координаты.</p>
+                            <p>2.4. При необходимости игрок может сгенерировать официальный пропуск на странице <a href="pass.html">«Пропуск»</a>.</p>
+                        </div>
+                        <div class="rule-block">
+                            <h2>3. Техника безопасности</h2>
+                            <p>3.1. Категорически запрещается проникать на охраняемые и опасные объекты.</p>
+                            <p>3.2. Запрещается нарушать правила дорожного движения.</p>
+                            <p>3.3. Участники обязаны соблюдать общественный порядок.</p>
+                        </div>
+                        <div class="rule-block">
+                            <h2>4. Ответственность</h2>
+                            <p>4.1. Организатор не несёт ответственности за травмы, ущерб имуществу и иные последствия, возникшие в результате участия в Квесте.</p>
+                        </div>
+                    </div>
+                    <div class="rules-footer-note">
+                        <p>Данные правила действуют с 1 апреля 2026 года.</p>
+                        <p>Организатор оставляет за собой право вносить изменения.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+            <p class="footer-small">* Участие в квесте добровольное. Будьте внимательны на улицах.</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+    <!-- Секретный вход в админку: 5 кликов по логотипу -->
+<script>
+    let clickCount = 0;
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('click', function(e) {
+            clickCount++;
+            if (clickCount >= 5) {
+                clickCount = 0;
+                window.location.href = 'admin.html';
+            }
+            clearTimeout(this._timeout);
+            this._timeout = setTimeout(() => {
+                clickCount = 0;
+            }, 3000);
+        });
+    }
+</script>
+</body>
+</html>

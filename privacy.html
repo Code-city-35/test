@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Политика конфиденциальности — Код города</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:60px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="blog.html">Блог</a>
+                    <a href="rules.html">Правила</a>
+                    <a href="profile.html" class="active">Профиль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container" style="max-width:800px; padding:40px 20px;">
+            <h1 style="color:var(--accent);">Политика конфиденциальности</h1>
+            <p><strong>Дата вступления в силу:</strong> 14 августа 2026 года</p>
+
+            <h2>1. Общие положения</h2>
+            <p>Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональных данных пользователей сайта «Код города».</p>
+
+            <h2>2. Какие данные мы собираем</h2>
+            <ul>
+                <li><strong>Email-адрес</strong> — для регистрации и входа на сайт.</li>
+                <li><strong>Имя пользователя</strong> — для отображения в профиле.</li>
+                <li><strong>IP-адрес и данные браузера</strong> — автоматически для обеспечения безопасности и анализа работы сайта.</li>
+                <li><strong>Прогресс в квестах</strong> — для сохранения ваших достижений.</li>
+            </ul>
+
+            <h2>3. Как мы используем ваши данные</h2>
+            <ul>
+                <li>Для регистрации и авторизации на сайте.</li>
+                <li>Для сохранения вашего прогресса в квестах.</li>
+                <li>Для улучшения работы сайта.</li>
+            </ul>
+
+            <h2>4. Хранение данных</h2>
+            <p>Ваши данные хранятся в защищённой базе данных Supabase. Мы не передаём ваши данные третьим лицам.</p>
+
+            <h2>5. Ваши права</h2>
+            <p>Вы можете запросить удаление своих данных, написав нам на почту: <strong>code-city@yandex.ru</strong></p>
+
+            <h2>6. Контакты</h2>
+            <p>По всем вопросам, связанным с обработкой персональных данных, пишите: <strong>code-city@yandex.ru</strong></p>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+        </div>
+    </footer>
+    
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+    
+</body>
+</html>

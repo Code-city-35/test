@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Код города — главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:50px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html" class="active">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="blog.html">Блог</a>
+                    <a href="rules.html">Правила</a>
+                    <a href="profile.html">Профиль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Герой -->
+        <section class="container hero">
+            <div class="hero-content">
+                <div class="section-tag">Новое расследование</div>
+                <h1>Стань <span class="highlight">сыщиком</span> в своём городе</h1>
+                <div class="divider"></div>
+                <div class="hero-desc">
+                    Собирай улики, сканируй QR-коды и раскрывай тёмные дела. Каждый квест — это новое приключение.
+                </div>
+                <div class="hero-buttons">
+                    <a href="catalog.html" class="btn btn-primary">🚀 Начать</a>
+                    <a href="rules.html" class="btn btn-secondary">Как играть</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat"><span class="stat-number" id="totalQuests">0</span><span class="stat-label">Квестов</span></div>
+                    <div class="stat"><span class="stat-number">24/7</span><span class="stat-label">Доступность</span></div>
+                    <div class="stat"><span class="stat-number">0 ₽</span><span class="stat-label">Есть бесплатные</span></div>
+                </div>
+            </div>
+            <div class="hero-card-wrapper">
+                <div class="hero-card">
+                    <div class="corner-mark tl"></div>
+                    <div class="corner-mark tr"></div>
+                    <div class="corner-mark bl"></div>
+                    <div class="corner-mark br"></div>
+                    <span class="badge">🔥 Популярный</span>
+                    <h3 id="featuredQuestTitle">Призрак инженера</h3>
+                    <p id="featuredQuestDesc">Городская легенда о пропавшем инженере. Найди 7 улик и раскрой тайну.</p>
+                    <div class="meta" id="featuredQuestMeta">
+                        <span><span class="dot-accent"></span> 7 точек</span>
+                        <span><span class="dot-accent blue"></span> ~40 мин</span>
+                        <span><span class="dot-accent green"></span> Бесплатно</span>
+                    </div>
+                    <a href="box.html?id=1" class="btn btn-primary" id="featuredQuestLink">Начать</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Последняя новость -->
+        <section class="section latest-news">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-title">Последняя <span>новость</span></div>
+                    <div class="section-line"></div>
+                    <a href="blog.html" style="color:#ff6b35; font-weight:600; text-decoration:none;">Все новости →</a>
+                </div>
+                <div id="latestNewsContainer">
+                    <p style="color:#5a6a80;">Загрузка...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Как это работает -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-title">Как это <span>работает</span></div>
+                    <div class="section-line"></div>
+                    <span style="color:#5a6a80; font-size:14px;">4 шага</span>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card fade-up fade-up-d1">
+                        <span class="step-number">01</span>
+                        <span class="step-icon">📦</span>
+                        <h3>Выбери квест</h3>
+                        <p>Выбери уровень сложности и получи набор улик.</p>
+                    </div>
+                    <div class="step-card fade-up fade-up-d2">
+                        <span class="step-number">02</span>
+                        <span class="step-icon">🗺️</span>
+                        <h3>Найди место</h3>
+                        <p>Используй фото, текст и координаты, чтобы найти точку.</p>
+                    </div>
+                    <div class="step-card fade-up fade-up-d3">
+                        <span class="step-number">03</span>
+                        <span class="step-icon">📸</span>
+                        <h3>Сканируй QR</h3>
+                        <p>На месте найди QR-код и введи его на сайте.</p>
+                    </div>
+                    <div class="step-card fade-up fade-up-d4">
+                        <span class="step-number">04</span>
+                        <span class="step-icon">🏆</span>
+                        <h3>Найди клад</h3>
+                        <p>Собери все улики и получи финальные координаты.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="section-tag" style="display:inline-block; margin-bottom:12px;">Готов к приключению?</div>
+                <h2>Выбери свой <span style="color:#ff6b35;">квест</span></h2>
+                <p>Отправляйся на поиски тайника прямо сейчас.</p>
+                <a href="catalog.html" class="btn btn-primary btn-bottom">Открыть каталог</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+            <p class="footer-small">* Участие в квесте добровольное. Будьте внимательны на улицах.</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         ЕДИНСТВЕННЫЙ МОДУЛЬ ДЛЯ ЗАГРУЗКИ НОВОСТЕЙ И СТАТИСТИКИ
+         ============================================================ -->
+    <script type="module">
+        import { getLatestNews } from './js/news-data.js';
+        import { getQuests } from './js/quests-data.js';
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Загружаем последнюю новость
+            const container = document.getElementById('latestNewsContainer');
+            try {
+                const news = await getLatestNews();
+                if (news) {
+                    container.innerHTML = `
+                        <div class="news-card">
+                            <div class="corner-mark tl"></div>
+                            <div class="corner-mark tr"></div>
+                            <div class="corner-mark bl"></div>
+                            <div class="corner-mark br"></div>
+                            <div class="date">${new Date(news.date).toLocaleDateString('ru-RU')}</div>
+                            <h3>${news.title}</h3>
+                            ${news.image ? `<img src="${news.image}" alt="Иллюстрация">` : ''}
+                            <div class="content">${news.content}</div>
+                            <a href="blog.html" class="read-more">Читать все новости →</a>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<p style="color:#5a6a80;">Новостей пока нет. Добавьте первую через админку.</p>`;
+                }
+            } catch (e) {
+                container.innerHTML = `<p style="color:#ff6b6b;">Ошибка загрузки новостей</p>`;
+            }
+
+            // Обновляем статистику квестов
+            try {
+                const quests = await getQuests();
+                const totalEl = document.getElementById('totalQuests');
+                if (totalEl) {
+                    totalEl.textContent = quests.length;
+                }
+            } catch (e) {
+                // Игнорируем ошибку статистики
+            }
+        });
+    </script>
+
+    <!-- ============================================================
+         БУРГЕР-МЕНЮ (обычный скрипт, не модуль)
+         ============================================================ -->
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

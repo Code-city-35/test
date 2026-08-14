@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Блог — Код города</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:50px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="blog.html" class="active">Блог</a>
+                    <a href="rules.html">Правила</a>
+                    <a href="profile.html">Профиль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-title">📰 Все <span>новости</span></div>
+                    <div class="section-line"></div>
+                </div>
+                <div id="blogList">
+                    <!-- Загружается из JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <!-- ЕДИНСТВЕННЫЙ СКРИПТ — МОДУЛЬ -->
+    <script type="module">
+        import { getNews } from './js/news-data.js';
+
+        async function renderBlog() {
+            const container = document.getElementById('blogList');
+            try {
+                const news = await getNews();
+                if (!news || news.length === 0) {
+                    container.innerHTML = `<p style="color:#5a6a80;">Новостей пока нет.</p>`;
+                    return;
+                }
+                let html = '<div class="news-grid">';
+                for (const item of news) {
+                    html += `
+                        <div class="news-card">
+                            <div class="corner-mark tl"></div>
+                            <div class="corner-mark tr"></div>
+                            <div class="corner-mark bl"></div>
+                            <div class="corner-mark br"></div>
+                            <div class="date">${new Date(item.date).toLocaleDateString('ru-RU')}</div>
+                            <h3>${item.title}</h3>
+                            ${item.image ? `<img src="${item.image}" alt="Иллюстрация">` : ''}
+                            <div class="content">${item.content}</div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = `<p style="color:#ff6b6b;">Ошибка загрузки новостей: ${e.message}</p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderBlog);
+    </script>
+
+    <!-- Бургер-меню (обычный скрипт, не модуль) -->
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,96 +1,224 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Code-city // Профиль</title>
-<link rel="stylesheet" href="profile.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль — Код города</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <style>
+        /* Временные стили для переключения блоков */
+        .auth-block, .profile-block {
+            display: none;
+        }
+        .auth-block.active, .profile-block.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-<div class="city-grid"></div>
-<main class="profile-page">
-<header class="topbar">
-  <a class="brand" href="#">CODE-CITY<span>.</span></a>
-  <div class="top-meta">PROFILE // 001</div>
-</header>
 
-<section class="profile-card panel">
-  <div class="corner corner-tl"></div><div class="corner corner-br"></div>
-  <div class="profile-label">CODE-CITY // ПРОФИЛЬ</div>
-  <div class="profile-main">
-    <div class="avatar" id="avatar">Е</div>
-    <div class="identity">
-      <div class="status"><i></i> ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
-      <h1 id="username">ЕВГЕНИЙ</h1>
-      <p>Личный профиль исследователя</p>
-      <div class="researcher-code">КОД ИССЛЕДОВАТЕЛЯ <strong id="researcherCode">CC-7F42-A91C</strong></div>
-    </div>
-  </div>
-  <div class="level-row">
-    <div><span>УРОВЕНЬ</span><strong id="level">07</strong></div>
-    <div class="level-title" id="levelTitle">ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
-    <div class="xp-value"><b id="xp">720</b> / <span id="xpNext">1000</span> XP</div>
-  </div>
-  <div class="xp-bar"><span id="xpBar"></span></div>
-  <div class="joined">УЧАСТНИК С <span>АВГУСТ 2026</span></div>
-</section>
+    <!-- ШАПКА -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Код города" class="logo-img" style="height:60px; width:auto;">
+            </div>
+            <nav>
+                <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="blog.html">Блог</a>
+                    <a href="rules.html">Правила</a>
+                    <a href="profile.html" class="active">Профиль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-<section class="stats-grid">
-  <article class="stat panel"><strong id="quests">07</strong><span>КВЕСТОВ</span><small>завершено</small></article>
-  <article class="stat panel"><strong id="nodes">43</strong><span>NODE</span><small>найдено</small></article>
-  <article class="stat panel"><strong id="codes">31</strong><span>КОДОВ</span><small>разгадано</small></article>
-  <article class="stat panel"><strong id="time">08:42:15</strong><span>ВРЕМЯ</span><small>в игре</small></article>
-</section>
+    <main>
+        <div class="profile-page">
+            <div class="city-grid"></div>
 
-<section class="section">
-  <div class="section-head"><div><small>PROGRESS // 01</small><h2>ПРОГРЕСС ИССЛЕДОВАТЕЛЯ</h2></div><span class="section-code">CC // XP</span></div>
-  <div class="progress-panel panel">
-    <div class="rank-block"><div class="rank-number">07</div><div><b>ИССЛЕДОВАТЕЛЬ ГОРОДА</b><p>До следующего уровня осталось <strong>280 XP</strong></p></div></div>
-    <div class="progress-track"><span style="width:72%"></span></div>
-    <div class="progress-foot"><span>720 XP</span><span>1000 XP</span></div>
-  </div>
-</section>
+            <!-- ============================================================
+                 БЛОК АВТОРИЗАЦИИ (показывается, если не залогинен)
+                 ============================================================ -->
+            <div id="authBlock" class="auth-block">
+                <div style="max-width: 420px; margin: 40px auto; padding: 30px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;">
+                    <h2 style="color: var(--accent); text-align: center; margin-bottom: 20px;">🔐 Вход / Регистрация</h2>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="authEmail" placeholder="email@example.com" style="width:100%; padding:10px; margin-bottom:12px; background:var(--bg-input); border:1px solid var(--border); color:var(--text-primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="authPassword" placeholder="••••••••" style="width:100%; padding:10px; margin-bottom:16px; background:var(--bg-input); border:1px solid var(--border); color:var(--text-primary);">
+                    </div>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <button id="loginBtn" class="btn btn-primary" style="flex:1;">Войти</button>
+                        <button id="registerBtn" class="btn btn-secondary" style="flex:1;">Зарегистрироваться</button>
+                    </div>
+                    <div id="authMessage" style="margin-top:12px; color:var(--text-muted); text-align:center;"></div>
+                </div>
+            </div>
 
-<section class="section">
-  <div class="section-head"><div><small>ACHIEVEMENTS // 02</small><h2>ДОСТИЖЕНИЯ</h2></div><span class="section-code">12 / 24</span></div>
-  <div class="achievements" id="achievements"></div>
-</section>
+            <!-- ============================================================
+                 БЛОК ПРОФИЛЯ (показывается, если залогинен)
+                 ============================================================ -->
+            <div id="profileBlock" class="profile-block">
 
-<section class="section">
-  <div class="section-head"><div><small>CITY // 03</small><h2>ИССЛЕДОВАНИЕ ГОРОДА</h2></div><span class="section-code">58%</span></div>
-  <div class="city-panel panel">
-    <div class="map">
-      <div class="route r1"></div><div class="route r2"></div><div class="route r3"></div>
-      <i class="node n1 found"></i><i class="node n2 found"></i><i class="node n3 found"></i>
-      <i class="node n4 found"></i><i class="node n5"></i><i class="node n6"></i>
-      <span class="map-label ml1">NODE 01</span><span class="map-label ml2">NODE 04</span><span class="map-label ml3">SECTOR B</span>
-    </div>
-    <div class="city-stats">
-      <div><span>ГОРОД</span><strong>ЧЕРЕПОВЕЦ</strong></div>
-      <div><span>ИССЛЕДОВАНО</span><strong>58%</strong></div>
-      <div><span>NODE</span><strong>43 / 74</strong></div>
-      <div><span>РАЙОНЫ</span><strong>6 / 12</strong></div>
-    </div>
-  </div>
-</section>
+                <!-- Вся твоя разметка профиля (скопируй сюда) -->
+                <section class="profile-card panel">
+                    <div class="corner corner-tl"></div>
+                    <div class="corner corner-br"></div>
+                    <div class="profile-label">CODE-CITY // ПРОФИЛЬ</div>
+                    <div class="profile-main">
+                        <div class="avatar" id="avatar">Е</div>
+                        <div class="identity">
+                            <div class="status"><i></i> ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
+                            <h1 id="username">ЕВГЕНИЙ</h1>
+                            <p>Личный профиль исследователя</p>
+                            <div class="researcher-code">КОД ИССЛЕДОВАТЕЛЯ <strong id="researcherCode">CC-7F42-A91C</strong></div>
+                        </div>
+                    </div>
+                    <div class="level-row">
+                        <div><span>УРОВЕНЬ</span><strong id="level">07</strong></div>
+                        <div class="level-title" id="levelTitle">ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
+                        <div class="xp-value"><b id="xp">720</b> / <span id="xpNext">1000</span> XP</div>
+                    </div>
+                    <div class="xp-bar"><span id="xpBar" style="width:72%;"></span></div>
+                    <div class="joined">УЧАСТНИК С <span>АВГУСТ 2026</span></div>
+                </section>
 
-<section class="section">
-  <div class="section-head"><div><small>ROUTES // 04</small><h2>ПОСЛЕДНИЕ МАРШРУТЫ</h2></div><span class="section-code">07 QUESTS</span></div>
-  <div class="routes" id="routes"></div>
-</section>
+                <section class="stats-grid">
+                    <article class="stat panel"><strong id="quests">07</strong><span>КВЕСТОВ</span><small>завершено</small></article>
+                    <article class="stat panel"><strong id="nodes">43</strong><span>NODE</span><small>найдено</small></article>
+                    <article class="stat panel"><strong id="codes">31</strong><span>КОДОВ</span><small>разгадано</small></article>
+                    <article class="stat panel"><strong id="time">08:42:15</strong><span>ВРЕМЯ</span><small>в игре</small></article>
+                </section>
 
-<section class="section">
-  <div class="section-head"><div><small>ACTIVITY // 05</small><h2>АКТИВНОСТЬ</h2></div><span class="section-code">LIVE</span></div>
-  <div class="activity panel" id="activity"></div>
-</section>
+                <section class="section">
+                    <div class="section-head">
+                        <div><small>PROGRESS // 01</small><h2>ПРОГРЕСС ИССЛЕДОВАТЕЛЯ</h2></div>
+                        <span class="section-code">CC // XP</span>
+                    </div>
+                    <div class="progress-panel panel">
+                        <div class="rank-block">
+                            <div class="rank-number" id="rankNumber">07</div>
+                            <div><b id="rankTitle">ИССЛЕДОВАТЕЛЬ ГОРОДА</b><p>До следующего уровня осталось <strong id="xpToNext">280 XP</strong></p></div>
+                        </div>
+                        <div class="progress-track"><span id="xpProgress" style="width:72%;"></span></div>
+                        <div class="progress-foot"><span id="xpCurrent">720 XP</span><span id="xpMax">1000 XP</span></div>
+                    </div>
+                </section>
 
-<section class="section">
-  <div class="section-head"><div><small>SAVED // 06</small><h2>СОХРАНЁННЫЕ КВЕСТЫ</h2></div><span class="section-code">03</span></div>
-  <div class="saved" id="saved"></div>
-</section>
+                <section class="section">
+                    <div class="section-head">
+                        <div><small>ACHIEVEMENTS // 02</small><h2>ДОСТИЖЕНИЯ</h2></div>
+                        <span class="section-code">12 / 24</span>
+                    </div>
+                    <div class="achievements" id="achievements"></div>
+                </section>
 
-<footer class="footer"><span>CODE-CITY // CITY QUEST SYSTEM</span><span>PROFILE // 001</span></footer>
-</main>
-<script src="profile.js"></script>
+                <section class="section">
+                    <div class="section-head">
+                        <div><small>CITY // 03</small><h2>ИССЛЕДОВАНИЕ ГОРОДА</h2></div>
+                        <span class="section-code">58%</span>
+                    </div>
+                    <div class="city-panel panel">
+                        <div class="map">
+                            <div class="route r1"></div>
+                            <div class="route r2"></div>
+                            <div class="route r3"></div>
+                            <i class="node n1 found"></i>
+                            <i class="node n2 found"></i>
+                            <i class="node n3 found"></i>
+                            <i class="node n4 found"></i>
+                            <i class="node n5"></i>
+                            <i class="node n6"></i>
+                            <span class="map-label ml1">NODE 01</span>
+                            <span class="map-label ml2">NODE 04</span>
+                            <span class="map-label ml3">SECTOR B</span>
+                        </div>
+                        <div class="city-stats">
+                            <div><span>ГОРОД</span><strong>ЧЕРЕПОВЕЦ</strong></div>
+                            <div><span>ИССЛЕДОВАНО</span><strong>58%</strong></div>
+                            <div><span>NODE</span><strong>43 / 74</strong></div>
+                            <div><span>РАЙОНЫ</span><strong>6 / 12</strong></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-head">
+                        <div><small>ROUTES // 04</small><h2>ПОСЛЕДНИЕ МАРШРУТЫ</h2></div>
+                        <span class="section-code">07 QUESTS</span>
+                    </div>
+                    <div class="routes" id="routes"></div>
+                </section>
+
+                <section class="section">
+                    <div class="section-head">
+                        <div><small>ACTIVITY // 05</small><h2>АКТИВНОСТЬ</h2></div>
+                        <span class="section-code">LIVE</span>
+                    </div>
+                    <div class="activity panel" id="activity"></div>
+                </section>
+
+                <section class="section">
+                    <div class="section-head">
+                        <div><small>SAVED // 06</small><h2>СОХРАНЁННЫЕ КВЕСТЫ</h2></div>
+                        <span class="section-code">03</span>
+                    </div>
+                    <div class="saved" id="saved"></div>
+                </section>
+                
+                <!-- Место для ссылки на админку (только для администраторов) -->
+                <div id="adminLinkPlaceholder" style="margin-top: 20px; text-align: center;">
+    
+                </div>
+
+                <!-- КНОПКА ВЫХОДА -->
+                <div style="margin-top: 30px; text-align: center;">
+                    <button id="logoutBtn" class="btn btn-secondary" style="border-color: #ff6b6b; color: #ff6b6b;">🚪 Выйти</button>
+                </div>
+
+            </div> <!-- конец profile-block -->
+
+        </div> <!-- конец profile-page -->
+    </main>
+
+    <!-- ФУТЕР -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>Код города · Череповец · 2026</p>
+            <p class="footer-small">* Участие в квесте добровольное. Будьте внимательны на улицах.</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <!-- СКРИПТЫ -->
+    <script src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/profile.js"></script>
+
+    <!-- Бургер-меню -->
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
 </body>
 </html>
