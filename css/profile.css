@@ -1,1 +1,705 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
 
+/* ============================================================
+   ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ (только для профиля)
+   ===========================================================*/
+:root {
+    --bg:#080c1a;
+    --panel:#0d1324;
+    --panel2:#10182b;
+    --accent:#ff6b35;
+    --text:#f5f7fb;
+    --muted:#8992a7;
+    --line:rgba(255,255,255,.09);
+    --mono:'Space Mono',monospace;
+    --sans:Inter,system-ui,sans-serif
+}
+
+/* ============================================================
+   СЕТКА НА ФОНЕ (оставляем)
+   ============================================================ */
+.city-grid {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .16;
+    background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+/* ============================================================
+   ОСНОВНОЙ КОНТЕЙНЕР ПРОФИЛЯ
+   ============================================================ */
+.profile-page {
+    width: min(1120px, calc(100% - 32px));
+    margin: auto;
+    position: relative;
+    padding: 24px 0 60px;
+}
+
+/* ============================================================
+   КАРТОЧКА ПРОФИЛЯ
+   ============================================================ */
+.panel {
+    background: linear-gradient(145deg, rgba(16,24,43,.95), rgba(10,15,29,.97));
+    border: 1px solid var(--line);
+    box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    position: relative;
+}
+
+.profile-card {
+    padding: 30px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-card:after {
+    content: "";
+    position: absolute;
+    width: 480px;
+    height: 480px;
+    right: -170px;
+    bottom: -260px;
+    border: 1px solid rgba(255,107,53,.15);
+    border-radius: 50%;
+}
+
+.profile-label {
+    font: 700 10px var(--mono);
+    letter-spacing: .12em;
+    color: var(--accent);
+    margin-bottom: 24px;
+}
+
+.profile-main {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.avatar {
+    width: 84px;
+    height: 84px;
+    border: 1px solid rgba(255,107,53,.55);
+    background: rgba(255,107,53,.08);
+    display: grid;
+    place-items: center;
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--accent);
+    position: relative;
+}
+
+.avatar:after {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 1px dashed rgba(255,107,53,.3);
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 10px var(--mono);
+    letter-spacing: .12em;
+    color: var(--muted);
+}
+
+.status i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+}
+
+.identity h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: -0.055em;
+    margin: 7px 0 5px;
+}
+
+.identity p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.researcher-code {
+    font: 700 10px var(--mono);
+    letter-spacing: .12em;
+    color: var(--muted);
+    margin-top: 15px;
+}
+
+.researcher-code strong {
+    color: var(--text);
+    margin-left: 8px;
+}
+
+/* ============================================================
+   УРОВЕНЬ И XP
+   ============================================================ */
+.level-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: end;
+    margin-top: 28px;
+}
+
+.level-row span,
+.level-row .xp-value {
+    font: 700 10px var(--mono);
+    color: var(--muted);
+    letter-spacing: .1em;
+}
+
+.level-row strong {
+    display: block;
+    font: 800 28px var(--mono);
+    color: var(--accent);
+}
+
+.level-title {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.xp-value {
+    text-align: right;
+}
+
+.xp-value b {
+    color: var(--accent);
+}
+
+.xp-bar, .progress-track {
+    height: 8px;
+    background: #1a2133;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 11px;
+}
+
+.xp-bar span, .progress-track span {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 20px rgba(255,107,53,.35);
+}
+
+.joined {
+    font: 700 10px var(--mono);
+    color: var(--muted);
+    margin-top: 14px;
+}
+
+.joined span {
+    color: var(--text);
+    margin-left: 6px;
+}
+
+.corner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: var(--accent);
+}
+
+.corner-tl {
+    top: 12px;
+    left: 12px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+}
+
+.corner-br {
+    right: 12px;
+    bottom: 12px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+}
+
+/* ============================================================
+   СТАТИСТИКА
+   ============================================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 14px 0 46px;
+}
+
+.stat {
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.stat strong {
+    display: block;
+    font: 800 clamp(23px, 4vw, 34px) var(--mono);
+    color: var(--text);
+}
+
+.stat span {
+    display: block;
+    font: 700 10px var(--mono);
+    color: var(--accent);
+    letter-spacing: .12em;
+    margin-top: 7px;
+}
+
+.stat small {
+    display: block;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   ДОСТИЖЕНИЯ
+   ============================================================ */
+.section {
+    margin-top: 42px;
+}
+
+.section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 13px;
+}
+
+.section-head h2 {
+    font-size: 19px;
+    letter-spacing: -0.035em;
+    margin-top: 5px;
+    color: var(--accent);
+}
+
+.progress-panel {
+    padding:22px;
+    border-radius:13px
+}
+
+.rank-block {
+    display:flex;
+    gap:16px;
+    align-items:center
+}
+
+.rank-number {
+    font:800 40px var(--mono);
+    color:var(--accent)
+}
+
+.rank-block b {
+    font-size:14px
+}
+
+.rank-block p {
+    font-size:12px;
+    color:var(--muted);
+    margin-top:5px
+}
+
+.rank-block strong {
+    color:var(--text)
+}
+
+.progress-foot{
+    display:flex;
+    justify-content:space-between;
+    font:700 10px var(--mono);
+    color:var(--muted);
+    margin-top:8px
+}
+
+.achievements {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.achievement {
+    padding: 20px;
+    border-radius: 12px;
+    min-height: 145px;
+}
+
+.achievement .badge {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255,107,53,.45);
+    color: var(--accent);
+    font-size: 19px;
+    margin-bottom: 18px;
+}
+
+.achievement.locked {
+    opacity: .45;
+}
+
+.achievement b {
+    font-size: 12px;
+}
+
+.achievement p {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 6px;
+}
+
+.achievement small {
+    display: block;
+    font: 700 9px var(--mono);
+    color: var(--accent);
+    margin-top: 12px;
+}
+
+/* ============================================================
+   КАРТА
+   ============================================================ */
+.city-panel {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.map {
+    height: 280px;
+    position: relative;
+    background-color: #0a1020;
+    background-image: linear-gradient(25deg, transparent 48%, rgba(255,255,255,.06) 49%, rgba(255,255,255,.06) 51%, transparent 52%),
+                      linear-gradient(110deg, transparent 48%, rgba(255,255,255,.045) 49%, rgba(255,255,255,.045) 51%, transparent 52%);
+    background-size: 130px 90px;
+}
+
+.map:after {
+    content: "CITY // 35.14° N / 37.92° E";
+    position: absolute;
+    top: 15px;
+    left: 16px;
+    font: 700 9px var(--mono);
+    color: #5f687c;
+}
+
+.route {
+    position: absolute;
+    height: 1px;
+    background: var(--accent);
+    transform-origin: left;
+    box-shadow: 0 0 8px rgba(255,107,53,.35);
+}
+
+.r1 {
+    width: 240px;
+    left: 17%;
+    top: 62%;
+    transform: rotate(-17deg);
+}
+
+.r2 {
+    width: 210px;
+    left: 44%;
+    top: 50%;
+    transform: rotate(24deg);
+}
+
+.r3 {
+    width: 150px;
+    left: 62%;
+    top: 59%;
+    transform: rotate(-42deg);
+}
+
+.node {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border: 2px solid #5e687b;
+    border-radius: 50%;
+    background: var(--bg);
+    z-index: 2;
+}
+
+.node.found {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 14px rgba(255,107,53,.55);
+}
+
+.n1 { left: 15%; top: 59%; }
+.n2 { left: 42%; top: 51%; }
+.n3 { left: 62%; top: 60%; }
+.n4 { left: 79%; top: 40%; }
+.n5 { left: 72%; top: 76%; }
+.n6 { left: 35%; top: 29%; }
+
+.map-label {
+    position: absolute;
+    font: 700 8px var(--mono);
+    color: #697389;
+}
+
+.ml1 { left: 12%; top: 51%; }
+.ml2 { left: 76%; top: 33%; }
+.ml3 { right: 12%; bottom: 18%; }
+
+.city-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+}
+
+.city-stats div {
+    padding: 17px;
+    border-right: 1px solid var(--line);
+}
+
+.city-stats div:last-child { border-right: 0; }
+
+.city-stats span {
+    display: block;
+    font: 700 9px var(--mono);
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.city-stats strong {
+    font-size: 12px;
+}
+
+/* ============================================================
+   ПРОЙДЕННЫЕ МАРШРУТЫ
+   ============================================================ */
+.routes {
+    display: grid;
+    gap: 10px;
+}
+
+.route-card {
+    padding: 18px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+}
+
+.route-card h3 {
+    font-size: 14px;
+    margin: 0 0 5px;
+}
+
+.route-card p {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.route-meta {
+    font: 700 9px var(--mono);
+    color: var(--accent);
+    margin-top: 10px;
+}
+
+.route-progress {
+    text-align: right;
+    font: 700 10px var(--mono);
+    color: var(--muted);
+}
+
+.route-progress strong {
+    display: block;
+    color: var(--text);
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+/* ============================================================
+   АКТИВНОСТЬ
+   ============================================================ */
+.activity {
+    padding: 4px 18px;
+    border-radius: 12px;
+}
+
+.activity-item {
+    display: grid;
+    grid-template-columns: 13px 1fr auto;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+}
+
+.activity-item:last-child {
+    border: 0;
+}
+
+.activity-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+}
+
+.activity-item b {
+    font-size: 12px;
+}
+
+.activity-item p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.activity-item time {
+    font: 700 9px var(--mono);
+    color: var(--muted);
+}
+
+/* ============================================================
+   СОХРАНЁННЫЕ КВЕСТЫ
+   ============================================================ */
+.saved {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.saved-card {
+    padding: 20px;
+    border-radius: 12px;
+    min-height: 125px;
+}
+
+.saved-card span {
+    font: 700 9px var(--mono);
+    color: var(--accent);
+}
+
+.saved-card h3 {
+    font-size: 14px;
+    margin: 13px 0 8px;
+}
+
+.saved-card p {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width: 760px) {
+    .profile-page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 10px;
+    }
+
+    .profile-card {
+        padding: 22px;
+    }
+
+    .profile-main {
+        align-items: flex-start;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 27px;
+        flex: none;
+    }
+
+    .identity h1 {
+        font-size: 30px;
+    }
+
+    .researcher-code {
+        line-height: 1.6;
+    }
+
+    .level-row {
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+    }
+
+    .xp-value {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 34px;
+    }
+
+    .stat {
+        padding: 16px;
+    }
+
+    .section {
+        margin-top: 34px;
+    }
+
+    .achievements {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .city-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .city-stats div:nth-child(2) {
+        border-right: 0;
+    }
+    .city-stats div:nth-child(-n+2) {
+        border-bottom: 1px solid var(--line);
+    }
+
+    .saved {
+        grid-template-columns: 1fr;
+    }
+
+    .route-card {
+        grid-template-columns: 1fr;
+    }
+
+    .route-progress {
+        text-align: left;
+    }
+}
+
+@media (max-width: 430px) {
+    .profile-main {
+        gap: 13px;
+    }
+    .identity h1 {
+        font-size: 25px;
+    }
+    .identity p {
+        font-size: 11px;
+    }
+    .avatar {
+        width: 62px;
+        height: 62px;
+    }
+    .achievements {
+        grid-template-columns: 1fr 1fr;
+    }
+    .achievement {
+        padding: 15px;
+        min-height: 135px;
+    }
+    .map {
+        height: 230px;
+    }
+    .section-head h2 {
+        font-size: 16px;
+    }
+}
