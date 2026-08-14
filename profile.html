@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code-city // Профиль</title>
+<link rel="stylesheet" href="profile.css">
+</head>
+<body>
+<div class="city-grid"></div>
+<main class="profile-page">
+<header class="topbar">
+  <a class="brand" href="#">CODE-CITY<span>.</span></a>
+  <div class="top-meta">PROFILE // 001</div>
+</header>
+
+<section class="profile-card panel">
+  <div class="corner corner-tl"></div><div class="corner corner-br"></div>
+  <div class="profile-label">CODE-CITY // ПРОФИЛЬ</div>
+  <div class="profile-main">
+    <div class="avatar" id="avatar">Е</div>
+    <div class="identity">
+      <div class="status"><i></i> ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
+      <h1 id="username">ЕВГЕНИЙ</h1>
+      <p>Личный профиль исследователя</p>
+      <div class="researcher-code">КОД ИССЛЕДОВАТЕЛЯ <strong id="researcherCode">CC-7F42-A91C</strong></div>
+    </div>
+  </div>
+  <div class="level-row">
+    <div><span>УРОВЕНЬ</span><strong id="level">07</strong></div>
+    <div class="level-title" id="levelTitle">ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
+    <div class="xp-value"><b id="xp">720</b> / <span id="xpNext">1000</span> XP</div>
+  </div>
+  <div class="xp-bar"><span id="xpBar"></span></div>
+  <div class="joined">УЧАСТНИК С <span>АВГУСТ 2026</span></div>
+</section>
+
+<section class="stats-grid">
+  <article class="stat panel"><strong id="quests">07</strong><span>КВЕСТОВ</span><small>завершено</small></article>
+  <article class="stat panel"><strong id="nodes">43</strong><span>NODE</span><small>найдено</small></article>
+  <article class="stat panel"><strong id="codes">31</strong><span>КОДОВ</span><small>разгадано</small></article>
+  <article class="stat panel"><strong id="time">08:42:15</strong><span>ВРЕМЯ</span><small>в игре</small></article>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><small>PROGRESS // 01</small><h2>ПРОГРЕСС ИССЛЕДОВАТЕЛЯ</h2></div><span class="section-code">CC // XP</span></div>
+  <div class="progress-panel panel">
+    <div class="rank-block"><div class="rank-number">07</div><div><b>ИССЛЕДОВАТЕЛЬ ГОРОДА</b><p>До следующего уровня осталось <strong>280 XP</strong></p></div></div>
+    <div class="progress-track"><span style="width:72%"></span></div>
+    <div class="progress-foot"><span>720 XP</span><span>1000 XP</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><small>ACHIEVEMENTS // 02</small><h2>ДОСТИЖЕНИЯ</h2></div><span class="section-code">12 / 24</span></div>
+  <div class="achievements" id="achievements"></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><small>CITY // 03</small><h2>ИССЛЕДОВАНИЕ ГОРОДА</h2></div><span class="section-code">58%</span></div>
+  <div class="city-panel panel">
+    <div class="map">
+      <div class="route r1"></div><div class="route r2"></div><div class="route r3"></div>
+      <i class="node n1 found"></i><i class="node n2 found"></i><i class="node n3 found"></i>
+      <i class="node n4 found"></i><i class="node n5"></i><i class="node n6"></i>
+      <span class="map-label ml1">NODE 01</span><span class="map-label ml2">NODE 04</span><span class="map-label ml3">SECTOR B</span>
+    </div>
+    <div class="city-stats">
+      <div><span>ГОРОД</span><strong>ЧЕРЕПОВЕЦ</strong></div>
+      <div><span>ИССЛЕДОВАНО</span><strong>58%</strong></div>
+      <div><span>NODE</span><strong>43 / 74</strong></div>
+      <div><span>РАЙОНЫ</span><strong>6 / 12</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><small>ROUTES // 04</small><h2>ПОСЛЕДНИЕ МАРШРУТЫ</h2></div><span class="section-code">07 QUESTS</span></div>
+  <div class="routes" id="routes"></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><small>ACTIVITY // 05</small><h2>АКТИВНОСТЬ</h2></div><span class="section-code">LIVE</span></div>
+  <div class="activity panel" id="activity"></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><small>SAVED // 06</small><h2>СОХРАНЁННЫЕ КВЕСТЫ</h2></div><span class="section-code">03</span></div>
+  <div class="saved" id="saved"></div>
+</section>
+
+<footer class="footer"><span>CODE-CITY // CITY QUEST SYSTEM</span><span>PROFILE // 001</span></footer>
+</main>
+<script src="profile.js"></script>
+</body>
+</html>
