@@ -1,5 +1,5 @@
 // ============================================================
-//  box.js — страница квеста с сохранением прогресса
+//  box.js — страница квеста с защитой от повторного XP
 // ============================================================
 
 import { getQuestById, getCluesByQuestId } from './quests-data.js';
@@ -13,11 +13,10 @@ let timerInterval = null;
 let isFinished = false;
 let isLocked = false;
 
-// Данные для сохранения прогресса
 let supabase = null;
 let userId = null;
 let attemptId = null;
-let clueIds = [];
+let isFirstTime = true;
 let xpEarnedThisRun = 0;
 
 // ============================================================
@@ -87,11 +86,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 `;
                 return;
             }
-            // Загружаем улики
             if (!currentBox.clues || currentBox.clues.length === 0) {
                 currentBox.clues = await getCluesByQuestId(boxId);
             }
-            // Создаём попытку, если пользователь авторизован
+
+            // Проверяем, проходил ли пользователь этот квест ранее
+            if (userId) {
+                await checkIfFirstTime(boxId);
+            }
+
+            // Создаём попытку (или продолжаем незавершённую)
             await createQuestAttempt(boxId);
             renderBox();
         } catch (e) {
@@ -109,7 +113,28 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 // ============================================================
-//  СОЗДАНИЕ ПОПЫТКИ ПРОХОЖДЕНИЯ КВЕСТА
+//  ПРОВЕРКА ПЕРВОГО ПРОХОЖДЕНИЯ
+// ============================================================
+async function checkIfFirstTime(questId) {
+    try {
+        const { data, error } = await supabase
+            .from('quest_attempts')
+            .select('status')
+            .eq('user_id', userId)
+            .eq('quest_id', questId)
+            .eq('status', 'completed')
+            .limit(1);
+
+        if (error) throw error;
+        isFirstTime = !data || data.length === 0;
+    } catch (e) {
+        console.error('Ошибка проверки первого прохождения:', e);
+        isFirstTime = true;
+    }
+}
+
+// ============================================================
+//  СОЗДАНИЕ ПОПЫТКИ
 // ============================================================
 async function createQuestAttempt(questId) {
     if (!userId) {
@@ -117,7 +142,6 @@ async function createQuestAttempt(questId) {
         return;
     }
     try {
-        // Проверяем, есть ли уже незавершённая попытка для этого квеста
         const { data: existing, error: findError } = await supabase
             .from('quest_attempts')
             .select('id, current_clue_index')
@@ -129,14 +153,16 @@ async function createQuestAttempt(questId) {
         if (findError) throw findError;
 
         if (existing) {
-            // Продолжаем существующую попытку
             attemptId = existing.id;
             currentStep = existing.current_clue_index || 0;
             console.log('Продолжаем попытку:', attemptId, 'шаг:', currentStep);
             return;
         }
 
-        // Создаём новую попытку
+        if (!isFirstTime) {
+            console.log('Квест уже пройден ранее, создаём попытку без начисления XP');
+        }
+
         const { data: newAttempt, error: insertError } = await supabase
             .from('quest_attempts')
             .insert({
@@ -159,12 +185,14 @@ async function createQuestAttempt(questId) {
 }
 
 // ============================================================
-//  СОХРАНЕНИЕ ПРОГРЕССА ПО УЛИКЕ
+//  СОХРАНЕНИЕ ПРОГРЕССА УЛИКИ
 // ============================================================
 async function saveClueProgress(clueId, codeSolved, answerSolved = false) {
-    if (!attemptId) return;
+    if (!attemptId || !isFirstTime) {
+        console.log('Пропуск сохранения: квест уже пройден ранее');
+        return;
+    }
     try {
-        // Проверяем, не сохранена ли уже эта улика
         const { data: existing, error: findError } = await supabase
             .from('clue_progress')
             .select('id')
@@ -175,16 +203,10 @@ async function saveClueProgress(clueId, codeSolved, answerSolved = false) {
         if (findError) throw findError;
 
         let xpEarned = 0;
-        if (codeSolved) xpEarned += 10; // 10 XP за код
-        if (answerSolved) xpEarned += 5;  // 5 XP за ответ
+        if (codeSolved) xpEarned += 10;
+        if (answerSolved) xpEarned += 5;
 
         if (existing) {
-            // Обновляем существующую запись
-            const updates = {};
-            if (codeSolved) updates.code_solved = true;
-            if (answerSolved) updates.answer_solved = true;
-            if (xpEarned > 0) updates.xp_earned = supabase.rpc('increment', { row_id: existing.id, amount: xpEarned });
-            // Проще перезаписать
             await supabase
                 .from('clue_progress')
                 .update({
@@ -195,7 +217,6 @@ async function saveClueProgress(clueId, codeSolved, answerSolved = false) {
                 })
                 .eq('id', existing.id);
         } else {
-            // Вставляем новую запись
             await supabase
                 .from('clue_progress')
                 .insert({
@@ -208,8 +229,7 @@ async function saveClueProgress(clueId, codeSolved, answerSolved = false) {
                 });
         }
 
-        // Начисляем XP пользователю (суммарно)
-        if (xpEarned > 0 && userId) {
+        if (xpEarned > 0 && userId && isFirstTime) {
             await addXP(userId, xpEarned);
         }
         xpEarnedThisRun += xpEarned;
@@ -219,11 +239,11 @@ async function saveClueProgress(clueId, codeSolved, answerSolved = false) {
 }
 
 // ============================================================
-//  НАЧИСЛЕНИЕ XP ПОЛЬЗОВАТЕЛЮ
+//  НАЧИСЛЕНИЕ XP
 // ============================================================
 async function addXP(userId, xpAmount) {
+    if (!isFirstTime) return;
     try {
-        // Получаем текущий XP и уровень
         const { data: profile, error: fetchError } = await supabase
             .from('profiles')
             .select('xp, level')
@@ -237,14 +257,12 @@ async function addXP(userId, xpAmount) {
         const xpPerLevel = 1000;
         let leveledUp = false;
 
-        // Проверяем, не повысился ли уровень
         while (newXp >= xpPerLevel * newLevel) {
             newXp -= xpPerLevel * newLevel;
             newLevel++;
             leveledUp = true;
         }
 
-        // Обновляем профиль
         const updateData = { xp: newXp };
         if (leveledUp) updateData.level = newLevel;
 
@@ -269,20 +287,22 @@ async function addXP(userId, xpAmount) {
 async function completeQuestAttempt() {
     if (!attemptId) return;
     try {
+        const updates = {
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+            play_time_seconds: timerSeconds,
+            current_clue_index: currentStep
+        };
         const { error } = await supabase
             .from('quest_attempts')
-            .update({
-                status: 'completed',
-                completed_at: new Date().toISOString(),
-                play_time_seconds: timerSeconds,
-                current_clue_index: currentStep
-            })
+            .update(updates)
             .eq('id', attemptId);
         if (error) throw error;
         console.log('Квест завершён, попытка обновлена');
-        // Дополнительно можно начислить бонус XP за завершение квеста
-        if (userId) {
-            await addXP(userId, 20); // 20 XP за прохождение
+
+        if (userId && isFirstTime) {
+            await addXP(userId, 20);
+            isFirstTime = false;
         }
     } catch (e) {
         console.error('Ошибка завершения квеста:', e);
@@ -306,10 +326,18 @@ function renderBox() {
         `;
         return;
     }
+
     let html = `
         <div class="line">> БОКС: ${box.title}</div>
         <div class="line dim">> Уровень: ${box.level}</div>
         <div class="line dim">> ${box.description || ''}</div>
+    `;
+
+    if (!isFirstTime && userId) {
+        html += `<div class="line" style="color: #f0c45a;">> 🔄 Вы уже проходили этот квест. XP не начисляются.</div>`;
+    }
+
+    html += `
         <div class="line" style="margin-top: 12px;">> Начинаем поиск...</div>
         <div id="stepContainer"></div>
         <div id="timerDisplay" class="line dim" style="margin-top: 12px;">⏱️ ${formatTime(timerSeconds)}</div>
@@ -325,7 +353,7 @@ function renderBox() {
         timerSeconds++;
         updateTimerDisplay();
     }, 1000);
-    currentStep = currentStep || 0; // если была восстановлена попытка, используем её
+    currentStep = currentStep || 0;
     showStep(currentStep);
 }
 
@@ -406,7 +434,6 @@ function showStep(index) {
             codeInput.disabled = true;
             checkBtn.disabled = true;
 
-            // Сохраняем прогресс кода
             await saveClueProgress(clue.id, true, false);
 
             if (clue.question && clue.question.trim() !== '') {
@@ -427,17 +454,13 @@ function showStep(index) {
                         answerInput.disabled = true;
                         answerBtn.disabled = true;
 
-                        // Сохраняем прогресс ответа
                         await saveClueProgress(clue.id, true, true);
-
-                        // Обновляем current_step в попытке
                         if (attemptId) {
                             await supabase
                                 .from('quest_attempts')
                                 .update({ current_clue_index: currentStep + 1 })
                                 .eq('id', attemptId);
                         }
-
                         setTimeout(() => {
                             currentStep++;
                             showStep(currentStep);
@@ -454,9 +477,6 @@ function showStep(index) {
                 });
                 setTimeout(() => answerInput.focus(), 200);
             } else {
-                // Вопроса нет — сразу переходим
-                // Сохраняем прогресс (код уже сохранён)
-                // Обновляем current_step
                 if (attemptId) {
                     await supabase
                         .from('quest_attempts')
@@ -486,7 +506,6 @@ function showStep(index) {
 // ============================================================
 function finishBox() {
     clearInterval(timerInterval);
-    // Завершаем попытку
     completeQuestAttempt();
 
     const container = document.getElementById('stepContainer');
@@ -500,6 +519,7 @@ function finishBox() {
                 <p style="color: #8aa3c0; font-size: 14px;">Отправляйся туда и забери свой приз!</p>
                 <p style="margin-top: 12px;">⏱️ Ваше время: ${formatTime(timerSeconds)}</p>
                 ${userId ? `<p style="color: #6fcf97; margin-top: 8px;">✅ Прогресс сохранён в профиль</p>` : ''}
+                ${!isFirstTime ? `<p style="color: #f0c45a; margin-top: 8px;">🔄 Повторное прохождение (XP не начислены)</p>` : ''}
             </div>
         </div>
         <a href="catalog.html" class="terminal-btn" style="margin-top: 12px;">📦 Вернуться в каталог</a>
@@ -530,4 +550,4 @@ function formatTime(sec) {
     const m = String(Math.floor(sec / 60)).padStart(2, '0');
     const s = String(sec % 60).padStart(2, '0');
     return `${m}:${s}`;
-}
+            }
