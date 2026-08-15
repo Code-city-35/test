@@ -1,5 +1,5 @@
 // ============================================================
-//  profile.js — профиль пользователя с авторизацией и статистикой
+//  profile.js — профиль пользователя с уникальными квестами
 // ============================================================
 
 import { getSupabaseClient, waitForSupabase } from './supabase-client.js';
@@ -114,14 +114,30 @@ async function loadProfile(userId) {
 
         if (error) throw error;
 
-        // 2. Количество завершённых квестов
-        const { count: completedQuests } = await supabase
+        // 2. Количество уникальных завершённых квестов (по одному на quest_id)
+        const { data: completedQuestsData, error: completedError } = await supabase
             .from('quest_attempts')
-            .select('*', { count: 'exact', head: true })
+            .select('quest_id, completed_at')
             .eq('user_id', userId)
-            .eq('status', 'completed');
+            .eq('status', 'completed')
+            .order('completed_at', { ascending: true });
 
-        // 3. Все попытки для получения ID
+        if (completedError) throw completedError;
+
+        // Считаем уникальные quest_id (только первое завершение)
+        const uniqueQuestIds = [];
+        const seen = new Set();
+        if (completedQuestsData) {
+            for (const row of completedQuestsData) {
+                if (!seen.has(row.quest_id)) {
+                    seen.add(row.quest_id);
+                    uniqueQuestIds.push(row.quest_id);
+                }
+            }
+        }
+        const completedQuests = uniqueQuestIds.length;
+
+        // 3. Все попытки для получения ID и расчёта статистики
         const { data: attempts } = await supabase
             .from('quest_attempts')
             .select('id, play_time_seconds, status, quest_id, started_at, completed_at, current_clue_index')
@@ -190,7 +206,7 @@ async function loadProfile(userId) {
             });
         }
 
-        // Если пользователь администратор — показываем ссылку на админку
+        // Ссылка на админку для администраторов
         const adminLinkContainer = document.getElementById('adminLinkPlaceholder');
         if (adminLinkContainer) {
             if (profile.is_admin) {
