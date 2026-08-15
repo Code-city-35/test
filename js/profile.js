@@ -1,5 +1,5 @@
 // ============================================================
-//  profile.js — профиль пользователя с уникальными квестами
+//  profile.js — профиль с уникальными завершёнными квестами
 // ============================================================
 
 import { getSupabaseClient, waitForSupabase } from './supabase-client.js';
@@ -114,28 +114,22 @@ async function loadProfile(userId) {
 
         if (error) throw error;
 
-        // 2. Количество уникальных завершённых квестов (по одному на quest_id)
-        const { data: completedQuestsData, error: completedError } = await supabase
+        // 2. УНИКАЛЬНЫЕ ЗАВЕРШЁННЫЕ КВЕСТЫ (только по одному разу на quest_id)
+        const { data: completedData, error: completedError } = await supabase
             .from('quest_attempts')
-            .select('quest_id, completed_at')
+            .select('quest_id')
             .eq('user_id', userId)
-            .eq('status', 'completed')
-            .order('completed_at', { ascending: true });
+            .eq('status', 'completed');
 
         if (completedError) throw completedError;
 
-        // Считаем уникальные quest_id (только первое завершение)
-        const uniqueQuestIds = [];
-        const seen = new Set();
-        if (completedQuestsData) {
-            for (const row of completedQuestsData) {
-                if (!seen.has(row.quest_id)) {
-                    seen.add(row.quest_id);
-                    uniqueQuestIds.push(row.quest_id);
-                }
-            }
+        // Собираем уникальные quest_id
+        const uniqueQuestIds = new Set();
+        if (completedData) {
+            completedData.forEach(row => uniqueQuestIds.add(row.quest_id));
         }
-        const completedQuests = uniqueQuestIds.length;
+        const completedQuests = uniqueQuestIds.size;
+        console.log('Уникальных завершённых квестов:', completedQuests);
 
         // 3. Все попытки для получения ID и расчёта статистики
         const { data: attempts } = await supabase
@@ -146,7 +140,7 @@ async function loadProfile(userId) {
 
         const attemptIds = attempts ? attempts.map(a => a.id) : [];
 
-        // 4. Количество решённых кодов (через clue_progress)
+        // 4. Количество решённых кодов
         let solvedCodes = 0;
         if (attemptIds.length > 0) {
             const { count: codes } = await supabase
@@ -168,7 +162,7 @@ async function loadProfile(userId) {
             solvedAnswers = answers || 0;
         }
 
-        // 6. Общее время в игре (сумма play_time_seconds)
+        // 6. Общее время в игре
         let totalTime = 0;
         if (attempts) {
             totalTime = attempts.reduce((sum, a) => sum + (a.play_time_seconds || 0), 0);
@@ -180,10 +174,10 @@ async function loadProfile(userId) {
             .select('*, achievements(*)')
             .eq('user_id', userId);
 
-        // 8. Последние маршруты (первые 5 попыток)
+        // 8. Последние маршруты
         const recentAttempts = attempts ? attempts.slice(0, 5) : [];
 
-        // 9. Активность (последние 5 событий)
+        // 9. Активность
         const activities = attempts ? attempts.slice(0, 5) : [];
 
         // Отображаем всё
@@ -206,7 +200,7 @@ async function loadProfile(userId) {
             });
         }
 
-        // Ссылка на админку для администраторов
+        // Ссылка на админку
         const adminLinkContainer = document.getElementById('adminLinkPlaceholder');
         if (adminLinkContainer) {
             if (profile.is_admin) {
