@@ -7,6 +7,9 @@ import { getCurrentUser, signOut, signIn, signUp } from './auth.js';
 
 let supabase = null;
 let currentUser = null;
+let currentProfile = null;
+let selectedAvatarFile = null;
+let avatarRemoved = false;
 
 // ============================================================
 //  ЗАГРУЗКА СТРАНИЦЫ
@@ -181,6 +184,7 @@ async function loadProfile(userId) {
         const activities = attempts ? attempts.slice(0, 5) : [];
 
         // Отображаем всё
+        currentProfile = profile;
         renderProfile(profile, {
             completedQuests: completedQuests || 0,
             solvedCodes: solvedCodes || 0,
@@ -212,6 +216,8 @@ async function loadProfile(userId) {
             }
         }
 
+        setupProfileEditor(profile);
+
     } catch (e) {
         console.error('Ошибка загрузки профиля:', e);
         document.getElementById('profileBlock').innerHTML = `
@@ -236,6 +242,17 @@ function renderProfile(profile, stats) {
     const xpBar = document.getElementById('xpBar');
 
     if (username) username.textContent = profile.username || 'Исследователь';
+
+    const avatar = document.getElementById('avatar');
+    if (avatar) {
+        if (profile.avatar_url) {
+            avatar.innerHTML = `<img src="${profile.avatar_url}" alt="Аватар">`;
+        } else {
+            const name = profile.username || 'И';
+            avatar.textContent = name.trim().charAt(0).toUpperCase();
+        }
+    }
+
     if (researcherCode) researcherCode.textContent = profile.researcher_code || '--';
     if (level) level.textContent = profile.level || 1;
     if (xp) xp.textContent = profile.xp || 0;
@@ -387,4 +404,155 @@ function formatTime(seconds) {
     const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
     const s = String(seconds % 60).padStart(2, '0');
     return `${h}:${m}:${s}`;
+}
+
+// ============================================================
+//  РЕДАКТИРОВАНИЕ ПРОФИЛЯ
+// ============================================================
+function setupProfileEditor(profile) {
+    const panel = document.getElementById('editProfilePanel');
+    const openBtn = document.getElementById('editProfileBtn');
+    const closeBtn = document.getElementById('closeEditProfile');
+    const saveBtn = document.getElementById('saveProfileBtn');
+    const input = document.getElementById('profileUsernameInput');
+    const avatarInput = document.getElementById('avatarInput');
+    const removeAvatarBtn = document.getElementById('removeAvatarBtn');
+    const message = document.getElementById('profileEditMessage');
+
+    if (!panel || !openBtn || !saveBtn || !input) return;
+
+    input.value = profile.username || '';
+
+    openBtn.onclick = () => {
+        input.value = currentProfile?.username || '';
+        panel.hidden = false;
+        panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    closeBtn.onclick = () => {
+        panel.hidden = true;
+        selectedAvatarFile = null;
+        avatarRemoved = false;
+        if (avatarInput) avatarInput.value = '';
+        message.textContent = '';
+    };
+
+    avatarInput?.addEventListener('change', () => {
+        const file = avatarInput.files?.[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            message.textContent = 'Файл больше 5 МБ';
+            message.style.color = '#ff6b6b';
+            avatarInput.value = '';
+            return;
+        }
+
+        selectedAvatarFile = file;
+        avatarRemoved = false;
+        message.textContent = 'Аватар выбран';
+        message.style.color = 'var(--accent)';
+    });
+
+    removeAvatarBtn?.addEventListener('click', () => {
+        selectedAvatarFile = null;
+        avatarRemoved = true;
+        if (avatarInput) avatarInput.value = '';
+        message.textContent = 'Аватар будет удалён';
+        message.style.color = 'var(--muted)';
+    });
+
+    saveBtn.onclick = async () => {
+        const username = input.value.trim();
+
+        if (username.length < 2) {
+            message.textContent = 'Имя должно содержать минимум 2 символа';
+            message.style.color = '#ff6b6b';
+            return;
+        }
+
+        if (username.length > 24) {
+            message.textContent = 'Имя не должно быть длиннее 24 символов';
+            message.style.color = '#ff6b6b';
+            return;
+        }
+
+        saveBtn.disabled = true;
+        message.textContent = 'СОХРАНЕНИЕ...';
+        message.style.color = 'var(--muted)';
+
+        try {
+            let avatarUrl = currentProfile?.avatar_url || null;
+
+            if (selectedAvatarFile) {
+                const ext = selectedAvatarFile.name.split('.').pop().toLowerCase();
+                const path = `${currentUser.id}/avatar.${ext}`;
+
+                const { error: uploadError } = await supabase
+                    .storage
+                    .from('avatars')
+                    .upload(path, selectedAvatarFile, {
+                        upsert: true,
+                        contentType: selectedAvatarFile.type,
+                        cacheControl: '3600'
+                    });
+
+                if (uploadError) throw uploadError;
+
+                const { data: publicData } = supabase
+                    .storage
+                    .from('avatars')
+                    .getPublicUrl(path);
+
+                avatarUrl = `${publicData.publicUrl}?v=${Date.now()}`;
+            }
+
+            if (avatarRemoved) avatarUrl = null;
+
+            const { data: updatedProfile, error } = await supabase
+                .from('profiles')
+                .update({
+                    username,
+                    avatar_url: avatarUrl
+                })
+                .eq('id', currentUser.id)
+                .select('*')
+                .single();
+
+            if (error) throw error;
+
+            currentProfile = updatedProfile;
+
+            const usernameEl = document.getElementById('username');
+            if (usernameEl) usernameEl.textContent = updatedProfile.username;
+
+            const avatarEl = document.getElementById('avatar');
+            if (avatarEl) {
+                if (updatedProfile.avatar_url) {
+                    avatarEl.innerHTML = `<img src="${updatedProfile.avatar_url}" alt="Аватар">`;
+                } else {
+                    avatarEl.textContent = updatedProfile.username.charAt(0).toUpperCase();
+                }
+            }
+
+            message.textContent = 'ПРОФИЛЬ СОХРАНЁН';
+            message.style.color = '#6fcf97';
+
+            selectedAvatarFile = null;
+            avatarRemoved = false;
+            if (avatarInput) avatarInput.value = '';
+
+            setTimeout(() => {
+                panel.hidden = true;
+                message.textContent = '';
+            }, 900);
+
+        } catch (e) {
+            console.error('Ошибка сохранения профиля:', e);
+            message.textContent = e.message || 'Не удалось сохранить профиль';
+            message.style.color = '#ff6b6b';
+        } finally {
+            saveBtn.disabled = false;
+        }
+    };
 }
