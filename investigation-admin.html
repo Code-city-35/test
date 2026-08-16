@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Админка расследований — Code-City</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/investigation-admin.css">
+    </head>
+    
+    <body>
+        <header class="main-header">
+            <div class="container">
+    
+                <div class="logo"><img src="assets/logo.png" alt="Code-City" class="logo-img" style="height:60px;width:auto">
+                </div>
+                
+                <nav>
+                    <button class="burger" id="burgerBtn"><span></span><span></span><span></span>
+                    </button>
+                    
+                    <div class="nav-links" id="navLinks">
+                        <a href="index.html">Главная</a>
+                        <a href="catalog.html">Каталог</a>
+                        <a href="blog.html">Блог</a>
+                        <a href="rules.html">Правила</a>
+                        <a href="profile.html">Профиль</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="inv-admin">
+            <div class="ia-shell">
+                <div id="adminApp">
+                    <div class="ia-card">Проверка прав доступа…
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="main-footer">
+            <div class="container">
+                <p>Код города · Череповец · 2026</p>
+                <a href="privacy.html">Политика конфиденциальности</a>
+            </div>
+        </footer>
+        
+        <script type="module" src="js/investigation-admin.js">
+        </script>
+        
+        <script>const burger=document.getElementById('burgerBtn'),navLinks=document.getElementById('navLinks');
+            burger?.addEventListener('click',function(){this.classList.toggle('active');
+            navLinks.classList.toggle('open')});
+            navLinks?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('active');
+            navLinks.classList.remove('open')}));   
+        </script>
+    </body>
+</html>
