@@ -41,7 +41,7 @@ async function renderCatalog(container) {
                     <p class="desc">${escapeHtml(box.description || '')}</p>
                     <div class="footer">
                         <span class="price ${priceClass}">${priceText}</span>
-                        <a href="box.html?id=${box.id}" class="btn btn-small">Начать</a>
+                        <a href="investigation.html?id=${box.id}" class="btn btn-small">Начать</a>
                     </div>
                 </div>
             `;

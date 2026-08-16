@@ -205,7 +205,7 @@ async function loadProfile(userId) {
         if (adminLinkContainer) {
             if (profile.is_admin) {
                 adminLinkContainer.innerHTML = `
-                    <a href="admin.html" class="btn btn-secondary" style="border-color: var(--accent); color: var(--accent);">⚙️ Админ-панель</a>
+                    <a href="investigation-admin.html" class="btn btn-secondary" style="border-color: var(--accent); color: var(--accent);">⚙️ Админ-панель</a>
                 `;
             } else {
                 adminLinkContainer.innerHTML = '';
@@ -272,34 +272,36 @@ function renderProfile(profile, stats) {
     if (time) time.textContent = formatTime(stats.totalTime || 0);
 
     // --- ДОСТИЖЕНИЯ ---
-    const achievementsContainer = document.getElementById('achievements');
-    if (achievementsContainer) {
-        const userAch = stats.userAchievements || [];
-        if (userAch.length === 0) {
-            achievementsContainer.innerHTML = `
-                <div class="achievement locked">
-                    <div class="badge">🔒</div>
-                    <b>Нет достижений</b>
-                    <p>Проходите квесты, чтобы открывать</p>
+// --- ДОСТИЖЕНИЯ ---
+const achievementsContainer = document.getElementById('achievements');
+if (achievementsContainer) {
+    const userAch = stats.userAchievements || [];
+    // Получаем список всех достижений с прогрессом
+    if (userAch.length === 0) {
+        achievementsContainer.innerHTML = `
+            <div class="achievement locked">
+                <div class="badge">🔒</div>
+                <b>Нет достижений</b>
+                <p>Проходите квесты, чтобы открывать</p>
+            </div>
+        `;
+    } else {
+        let html = '';
+        userAch.forEach(item => {
+            const ach = item.achievements;
+            const unlocked = item.unlocked_at !== null;
+            html += `
+                <div class="achievement ${unlocked ? '' : 'locked'}">
+                    <div class="badge">${ach.icon || '🏆'}</div>
+                    <b>${ach.name}</b>
+                    <p>${ach.description || ''}</p>
+                    ${unlocked ? `<small>✅ РАЗБЛОКИРОВАНО</small>` : `<small>🔒 ${item.progress} / ${ach.condition_value || 1}</small>`}
                 </div>
             `;
-        } else {
-            let html = '';
-            userAch.forEach(item => {
-                const ach = item.achievements;
-                const unlocked = item.unlocked_at !== null;
-                html += `
-                    <div class="achievement ${unlocked ? '' : 'locked'}">
-                        <div class="badge">${ach.icon || '🏆'}</div>
-                        <b>${ach.name}</b>
-                        <p>${ach.description || ''}</p>
-                        ${unlocked ? `<small>✅ РАЗБЛОКИРОВАНО</small>` : `<small>🔒 ${item.progress} / ${ach.condition_value || 1}</small>`}
-                    </div>
-                `;
-            });
-            achievementsContainer.innerHTML = html;
-        }
+        });
+        achievementsContainer.innerHTML = html;
     }
+}
 
     // --- ПОСЛЕДНИЕ МАРШРУТЫ ---
     const routesContainer = document.getElementById('routes');
