@@ -76,11 +76,16 @@
                     <div class="corner corner-br"></div>
                     <div class="profile-label">CODE-CITY // ПРОФИЛЬ</div>
                     <div class="profile-main">
-                        <div class="avatar" id="avatar">Е</div>
+                        <div class="profile-avatar-wrap">
+                            <div class="avatar" id="avatar">Е</div>
+                            <label class="avatar-edit" for="avatarInput" title="Изменить аватар">+</label>
+                            <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" hidden>
+                        </div>
                         <div class="identity">
                             <div class="status"><i></i> ИССЛЕДОВАТЕЛЬ ГОРОДА</div>
                             <h1 id="username">ИМЯ</h1>
                             <p>Личный профиль исследователя</p>
+                            <button type="button" class="profile-edit-trigger" id="editProfileBtn">ИЗМЕНИТЬ ПРОФИЛЬ</button>
                             <div class="researcher-code">КОД ИССЛЕДОВАТЕЛЯ <strong id="researcherCode">CC-7F42-A91C</strong></div>
                         </div>
                     </div>
@@ -178,6 +183,36 @@
                 <!-- Место для ссылки на админку (только для администраторов) -->
                 <div id="adminLinkPlaceholder" style="margin-top: 20px; text-align: center;">
     
+                </div>
+
+
+                <!-- РЕДАКТИРОВАНИЕ ПРОФИЛЯ -->
+                <div class="edit-profile-panel panel" id="editProfilePanel" hidden>
+                    <div class="edit-profile-head">
+                        <div>
+                            <small>IDENTITY // SETTINGS</small>
+                            <h2>РЕДАКТИРОВАНИЕ ПРОФИЛЯ</h2>
+                        </div>
+                        <button type="button" class="edit-close" id="closeEditProfile">×</button>
+                    </div>
+
+                    <label class="edit-label" for="profileUsernameInput">ИМЯ</label>
+                    <input class="edit-input" id="profileUsernameInput" type="text"
+                           maxlength="24" autocomplete="nickname"
+                           placeholder="Введите имя">
+
+                    <div class="edit-avatar-row">
+                        <div>
+                            <label class="edit-label">АВАТАР</label>
+                            <p>Необязательно. PNG, JPG или WEBP до 5 МБ.</p>
+                        </div>
+                        <button type="button" class="edit-secondary" id="removeAvatarBtn">УБРАТЬ АВАТАР</button>
+                    </div>
+
+                    <div class="edit-actions">
+                        <span class="edit-message" id="profileEditMessage"></span>
+                        <button type="button" class="btn btn-primary" id="saveProfileBtn">СОХРАНИТЬ</button>
+                    </div>
                 </div>
 
                 <!-- КНОПКА ВЫХОДА -->
